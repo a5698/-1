@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>생명기술 연구소 탈출</title>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f2a2e;--card:#173a40;--ink:#e8f6f3;--sub:#9fc2c6;--line:#2f5960;--acc:#4de0c0;--acc-ink:#04231d;--warn:#ff7a7a;--ok:#5fe08a;--gold:#ffd84d;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#e6f4f0;--card:#fff;--ink:#12343b;--sub:#4b6b70;--line:#bcd8d2;--acc:#0f8b8d;--acc-ink:#fff;--warn:#c0392b;--ok:#1a8f4d;--gold:#b98a00}}
+:root[data-theme="light"]{--bg:#e6f4f0;--card:#fff;--ink:#12343b;--sub:#4b6b70;--line:#bcd8d2;--acc:#0f8b8d;--acc-ink:#fff;--warn:#c0392b;--ok:#1a8f4d;--gold:#b98a00}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Gowun Dodum','Malgun Gothic',sans-serif;line-height:1.6;font-size:16px}
+h1,h2,h3{font-family:'Jua','Malgun Gothic',sans-serif;font-weight:400;margin:0}
+.wrap{max-width:820px;margin:0 auto;padding:16px 14px 60px}
+button{font:inherit;cursor:pointer}
+input,select{font:inherit;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:10px;padding:8px 10px;max-width:100%}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.btn{background:var(--acc);color:var(--acc-ink);border:0;border-radius:10px;padding:10px 18px}
+.btn.ghost{background:transparent;color:var(--acc);border:2px solid var(--acc)}
+.btn:disabled{opacity:.45;cursor:default}
+.card{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:18px;margin-bottom:12px}
+.hide{display:none!important}
+.title{font-size:clamp(30px,7vw,46px);line-height:1.15;margin-bottom:8px}
+.story{border-left:4px solid var(--warn);padding:2px 0 2px 12px;color:var(--sub);margin:12px 0}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0}
+.seg{display:inline-flex;border:2px solid var(--acc);border-radius:999px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--acc);padding:7px 14px}
+.seg button[aria-pressed=true]{background:var(--acc);color:var(--acc-ink)}
+.hud{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:8px 0;display:flex;gap:10px;align-items:center;flex-wrap:wrap;border-bottom:2px solid var(--line);margin-bottom:12px}
+.clock{font-family:'Jua';font-size:30px;min-width:92px;color:var(--acc)}
+.clock.low{color:var(--warn)}
+.pieces{display:flex;gap:5px;margin-left:auto}
+.piece{width:34px;height:40px;border:2px dashed var(--line);border-radius:8px;display:grid;place-items:center;font-family:'Jua';font-size:20px;color:var(--sub)}
+.piece.got{border:2px solid var(--gold);color:var(--gold)}
+.rooms{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+@media(max-width:520px){.rooms{grid-template-columns:repeat(2,1fr)}}
+.door{border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:12px;padding:8px;text-align:left;font-size:14px}
+.door b{display:block;font-family:'Jua';font-weight:400;font-size:16px}
+.door[aria-current=true]{border-color:var(--acc)}
+.door.done{border-color:var(--ok)}
+.door:disabled{opacity:.45}
+.case{background:color-mix(in srgb,var(--warn) 14%,transparent);border:2px dashed var(--warn);border-radius:10px;padding:8px 12px;margin:8px 0}
+.msg{min-height:1.5em;margin:8px 0}
+.msg.bad{color:var(--warn)}
+.shake{animation:sh .35s}
+@keyframes sh{20%{transform:translateX(-7px)}60%{transform:translateX(7px)}}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:520px){.two{grid-template-columns:1fr}}
+.pick{display:block;width:100%;text-align:left;margin:6px 0;padding:10px 12px;border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:10px}
+.pick.sel{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 18%,transparent)}
+.pick.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 20%,transparent)}
+.code{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.code .ch{font-family:'Jua';font-size:24px;letter-spacing:4px;color:var(--gold);min-width:110px}
+.code input{flex:1 1 180px}
+.ord{display:flex;gap:6px;align-items:center;margin:6px 0}
+.ord span{flex:1;padding:10px 12px;border:2px solid var(--line);border-radius:10px}
+.ord button{border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;width:38px;height:38px}
+.big{font-size:19px;margin:10px 0}
+.oxrow{display:flex;gap:14px;margin:10px 0}
+.oxb{flex:1;height:84px;font-family:'Jua';font-size:44px;border:0;border-radius:16px;color:#fff}
+.oxb.o{background:#2a7fd4}.oxb.x{background:#d4472a}
+.mem{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media(max-width:520px){.mem{grid-template-columns:repeat(2,1fr)}}
+.mc{min-height:72px;border:2px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);padding:6px;font-size:14px;line-height:1.35}
+.mc.back{background:repeat-linear-gradient(45deg,var(--line) 0 8px,var(--card) 8px 16px);font-size:28px}
+.mc.up{border-color:var(--acc)}
+.mc.hit{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 20%,transparent)}
+.tiles{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.tile{width:52px;height:58px;font-family:'Jua';font-size:28px;border:2px solid var(--gold);background:var(--card);color:var(--gold);border-radius:12px}
+.tile:disabled{opacity:.25}
+.ans{display:flex;gap:8px;margin:10px 0}
+.ans div{width:52px;height:58px;border:2px dashed var(--line);border-radius:12px;display:grid;place-items:center;font-family:'Jua';font-size:28px}
+.win{text-align:center}
+.stars{font-size:34px;color:var(--gold);letter-spacing:6px}
+.small{font-size:14px;color:var(--sub)}
+table{width:100%;border-collapse:collapse;font-size:15px;margin:8px 0}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}
+td.n,th.n{text-align:right}
+ul.q{text-align:left;max-width:560px;margin:8px auto;padding-left:20px}
+@media (prefers-reduced-motion:reduce){.shake{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div id="intro" class="card">
+<h1 class="title">생명기술 연구소 탈출</h1>
+<div class="story"><p style="margin:0">새벽 3시, 연구소 전체가 정전됐어요. 비상문은 곧 <b style="color:var(--warn)">영구 잠금</b>이 됩니다. 김 박사가 남긴 메모에는 이렇게 적혀 있어요.<br>"여섯 개의 사건을 해결하고 글자 조각을 모아, 미래를 위한 마지막 단어를 완성하라."</p></div>
+<ul class="small" style="padding-left:18px;margin:0 0 8px">
+<li>방마다 사건 파일과 게임 방식이 달라요. 마지막 방은 아케이드 게임이에요.</li>
+<li>오답은 시간이 30초 줄고, 힌트는 90초 줄어요. 짝 뒤집기 실수는 10초가 줄어요.</li><li>O/X 방은 7번 연속으로 맞혀야 하고, 마지막 문에는 함정 글자가 숨어 있어요.</li>
+<li>각자 자기 휴대폰으로 혼자 도전해요. 끝나면 결과 코드를 선생님께 제출하세요.</li>
+</ul>
+<div class="row">
+<input id="who" placeholder="학번 또는 이름" maxlength="14" aria-label="학번 또는 이름">
+<select id="lim" aria-label="제한 시간"><option value="600">10분 (도전)</option><option value="900" selected>15분</option><option value="1200">20분</option></select>
+</div>
+<div class="row"><button class="btn" id="go">탈출 시작</button></div><p class="small" id="best"></p>
+</div>
+
+<div id="game" class="hide">
+<div class="hud"><div class="clock" id="clock" role="timer">30:00</div><div class="small" id="pen"></div><div class="pieces" id="pieces" aria-label="글자 조각"></div></div>
+<div class="rooms" id="rooms"></div>
+<div class="card" id="box"></div>
+<p class="msg" id="msg" aria-live="polite"></p>
+</div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const sh=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const mk=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+let BEST=0;try{BEST=+localStorage.getItem('bioBest')||0}catch(e){}
+if(BEST)$('best').textContent='이 기기의 내 최고 점수: '+BEST+'점';
+
+const R=[
+{icon:'🌱',n:'식량 창고',clue:'발',case:'사건 1. 냉동 캡슐의 라벨이 지워졌다. 누군가 실험 식품을 뒤섞어 놓았다!',intro:'[짝 맞추기] 기술 이름과 설명을 짝지어 주세요.',
+ pairs:[['식물 공장','실내에서 빛, 물, 양분을 인위적으로 제공하여 기후 변화에 영향을 받지 않고 작물을 재배할 수 있는 시설'],['합성우유','젖소의 DNA를 효모 세포에서 배양하고, 진짜 우유와 같은 향이 나도록 조정한 식물성 유분을 추가해 만든다'],['식용 곤충','단백질, 비타민 등의 함량이 높아 미래의 식량 자원으로 활용할 수 있다'],['배양육','가축을 사육하지 않고 연구실에서 식용 고기를 생산하는 방법'],['바이오 에너지','동식물 등 생물체에서 유래한 유기물질인 바이오매스를 원료로 하여 얻는 재생 에너지'],['생분해성 플라스틱','토양 중의 미생물에 의해 쉽게 분해되는 플라스틱']]},
+{icon:'🧬',n:'의료 연구실',clue:'지',case:'사건 2. 김 박사의 컴퓨터가 초성 암호로 잠겼다. 마지막 검색어는 "치료"였다.',intro:'[초성 암호] 설명을 읽고 기술 이름을 입력하세요.',
+ codes:[['ㅇㅈㅈㅊㄹㅈ','유전자가 조작된 백혈구 등을 이용하여 암과 난치병 등을 치료','유전자치료제'],['ㅂㅇㅇㅍㄹㅌ','플라스틱 소재 대신 세포를 출력 재료로 사용하여 신체 일부나 인공 장기를 만듦','바이오프린팅'],['ㄴㄴㄹㅂ','나노 기술을 기반으로 만든 로봇으로, 몸속에 삽입하여 병을 진단하고 치료','나노로봇'],['ㅂㅇㅇㅊ','작은 기판 위에 DNA, 단백질 등을 결합하여 유전자 결함, 단백질 분포 등을 분석해 낼 수 있다','바이오칩'],['ㅇㄹㅇㅇㅇㄹㅂㄱㄱ','혈당 측정 콘택트렌즈, 피부 부착형 바이오 스탬프, 발목 착용형 헬스 케어 기기','의료용웨어러블기기',['의료용웨어러블','웨어러블기기','웨어러블']]]},
+{icon:'🤖',n:'나노 로봇 격납고',clue:'전',case:'사건 3. 나노 로봇이 오작동 중이다! 진짜와 가짜 정보를 가려내야 통제 장치가 풀린다.',intro:'[O/X 판정] 맞으면 O, 틀리면 X를 누르세요.',
+ ox:[['식물 공장에서는 기후 변화에 영향을 받지 않고 작물을 재배할 수 있다.',1,'실내에서 빛, 물, 양분을 인위적으로 제공해요.'],['배양육은 가축을 사육하지 않고 연구실에서 생산하는 고기이다.',1,'가축에서 줄기 세포를 채취해 근세포로 변환해요.'],['합성우유는 젖소의 젖을 짜서 가공해 만든다.',0,'젖소의 DNA를 효모 세포에서 배양해 만들어요.'],['식용 곤충은 단백질, 비타민 함량이 낮아 식량 자원으로 쓸 수 없다.',0,'함량이 높아 미래의 식량 자원으로 주목받아요.'],['바이오 프린팅은 플라스틱 소재로 신체 일부를 출력한다.',0,'플라스틱 대신 세포를 출력 재료로 써요.'],['나노 로봇은 몸속에 삽입하여 병을 진단하고 치료할 수 있다.',1,'나노 기술을 기반으로 만든 로봇이에요.'],['바이오칩은 유전자를 빠른 시간 내에 검색할 수 있어 시간과 비용을 절약한다.',1,'DNA, 단백질 등을 결합한 작은 기판이에요.'],['유전자 치료제는 유전자가 조작된 백혈구 등을 이용해 암과 난치병을 치료한다.',1,'교과서의 대표적인 유전자 치료 예시예요.'],['바이오 에너지의 원료는 석탄과 석유 같은 화석 연료이다.',0,'바이오 에너지는 생물체 유래 유기물질인 바이오매스가 원료예요.'],['바이오 에너지는 개발이 쉽고 대규모 비용이 필요 없다.',0,'개발이 어렵고 대규모 비용이 필요한 것이 단점이에요.'],['생분해성 플라스틱은 토양 중의 미생물에 의해 쉽게 분해된다.',1,'그래서 환경 오염을 줄이는 데 도움이 돼요.'],['인공 와우와 인공 기관지는 인공 장기의 예이다.',1,'손상된 신체 기능을 대신해요.'],['생명기술에는 긍정적 영향만 있고 부정적 영향은 없다.',0,'의약품 남용, 복제 인간 문제 등 부정적 영향도 있어요.']]},
+{icon:'💾',n:'데이터 보관소',clue:'속',case:'사건 4. 서버가 해킹당해 기록 카드가 뒤섞였다. 카드를 뒤집어 짝을 복구하라.',intro:'[짝 뒤집기] 카드 두 장을 뒤집어 용어와 설명의 짝을 찾으세요.',
+ mem:[['인공 장기','인공 와우, 인공 기관지'],['바이오 에너지의 종류','바이오 에탄올, 바이오 디젤, 바이오 부탄올, 바이오 가스'],['바이오 에너지의 단점','개발이 어렵고 대규모 비용이 필요하다'],['생명기술의 긍정적 영향','오염된 환경 복원, 질병 진단 및 치료, 인공 장기 개발'],['생명기술의 부정적 영향','의약품 남용, 유전자 변형 작물의 안전성 검증 부족, 복제 인간 문제, 생태계 순환 구조 파괴']]},
+{icon:'♻️',n:'바이오 공정실',clue:'가',case:'사건 5. 생산 관리 시스템이 고장 나 제조 순서가 뒤죽박죽이 됐다. 순서를 바로잡아라.',intro:'[순서 배열] ▲▼로 두 가지 생산 과정의 순서를 바로잡으세요.',
+ order:[['가축으로부터 줄기 세포를 채취한다','줄기 세포를 근세포로 변환한다','전기 자극을 주입한다','식용 고기로 만들어 먹는다'],['젖소의 DNA를 준비한다','DNA를 효모 세포에서 배양한다','우유 향이 나도록 조정한 식물성 유분을 추가한다','합성우유가 완성된다']]},
+{icon:'⚖️',n:'윤리 회의실',clue:'능',case:'사건 6. 회의실 천장에서 생명기술의 영향 카드가 쏟아진다! 긍정적 영향만 받아 최종 승인을 얻어라.',intro:'[아케이드] 서류함을 움직여 긍정적 영향 카드 16장을 받으세요. 부정적 영향 카드를 받으면 생명이 줄어요. (마우스·손가락 드래그, ←→ 키)'}
+];
+const WORD='지속가능발전';
+let G,timer,raf=0;const keys={};
+addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){keys[e.key]=1;e.preventDefault()}});
+addEventListener('keyup',e=>{keys[e.key]=0});
+
+$('go').onclick=()=>{if(!$('who').value.trim()){$('who').focus();$('who').placeholder='이름을 먼저 입력하세요!';return}
+ G={room:0,solved:[0,0,0,0,0,0].map(()=>false),letters:[],left:+$('lim').value,tot:+$('lim').value,hints:0,wrong:0,arc:0,over:false,
+ rs:[{ri:sh([0,1,2,3,4,5]),L:null,R:null,done:[]},{i:0},{pool:sh([0,1,2,3,4,5,6,7,8,9,10,11,12]),p:0,streak:0},{cards:sh([0,1,2,3,4].flatMap(p=>[[p,0],[p,1]])),open:[],matched:[],lock:false},{stage:0,ord:sh([0,1,2,3])},{}]};
+ $('intro').classList.add('hide');$('game').classList.remove('hide');
+ clearInterval(timer);timer=setInterval(tick,1000);draw();
+};
+const fmt=s=>String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');
+function tick(){G.left--;if(G.left<=0){clearInterval(timer);G.left=0;clock();lose()}else clock()}
+function clock(){$('clock').textContent=fmt(Math.max(0,G.left));$('clock').classList.toggle('low',G.left<=60)}
+function pen(s,t){G.left-=s;clock();$('pen').textContent='−'+s+'초';const m=$('msg');m.className='msg bad';m.textContent=t;const b=$('box');b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');if(G.left<=0){clearInterval(timer);G.left=0;clock();lose()}}
+function bad(t){G.wrong++;pen(30,t)}
+function ok(t){$('pen').textContent='';$('msg').className='msg';$('msg').textContent=t||''}
+function pcs(){$('pieces').innerHTML='';for(let i=0;i<6;i++)$('pieces').append(mk('div','piece'+(G.letters[i]?' got':''),G.letters[i]||'?'))}
+function draw(){
+ cancelAnimationFrame(raf);if(G.over)return;clock();pcs();
+ $('rooms').innerHTML='';
+ R.forEach((r,i)=>{const b=mk('button','door'+(G.solved[i]?' done':''));b.disabled=!(i===0||G.solved[i-1]);if(i===G.room)b.setAttribute('aria-current','true');b.append(mk('b','',r.icon+' '+r.n),mk('span','',G.solved[i]?'클리어':'도전'));b.onclick=()=>{G.room=i;ok();draw()};$('rooms').append(b)});
+ const box=$('box');box.innerHTML='';
+ if(G.solved.every(Boolean)){final();return}
+ if(G.solved[G.room]){box.append(mk('h3','','이 방은 클리어했어요'));const n=G.solved.findIndex(x=>!x);const b=mk('button','btn','다음 방으로');b.style.marginTop='10px';b.onclick=()=>{G.room=n;draw()};box.append(b);return}
+ const r=R[G.room];box.append(mk('h3','',r.icon+' '+r.n),mk('div','case','📁 '+r.case),mk('p','small',r.intro));
+ [pairs,codes,ox,mem,order,arcade][G.room](box);
+}
+function solve(i){cancelAnimationFrame(raf);G.solved[i]=true;G.letters[i]=R[i].clue;pcs();$('rooms').querySelectorAll('.door')[i].classList.add('done');
+ const box=$('box');box.innerHTML='';box.append(mk('h3','','사건 해결!'),mk('p','','글자 조각을 얻었어요.'));
+ const t=mk('div','tile',R[i].clue);t.style.display='grid';t.style.placeItems='center';box.append(t);
+ const n=G.solved.findIndex(x=>!x);const b=mk('button','btn',n>=0?'다음 방으로':'마지막 문으로');b.style.marginTop='12px';b.onclick=()=>{if(n>=0)G.room=n;ok();draw()};box.append(b);ok('조각 "'+R[i].clue+'" 획득!')}
+function hintBtn(box,txt){const b=mk('button','btn ghost','힌트 보기 (−90초)');b.style.marginTop='8px';b.onclick=()=>{G.hints++;pen(90,'힌트: '+txt);b.disabled=true};box.append(b)}
+
+function pairs(box){
+ const s=G.rs[0],P=R[0].pairs,two=mk('div','two'),l=mk('div'),r=mk('div');
+ const put=(par,i,txt,side)=>{const b=mk('button','pick',txt);if(s.done.includes(i)){b.classList.add('right');b.disabled=true}else if(s[side]===i)b.classList.add('sel');b.onclick=()=>{s[side]=i;chk()};par.append(b)};
+ P.forEach((_,i)=>put(l,i,P[i][0],'L'));s.ri.forEach(i=>put(r,i,P[i][1],'R'));
+ function chk(){if(s.L==null||s.R==null)return draw();
+  if(s.L===s.R){s.done.push(s.L);s.L=s.R=null;if(s.done.length===P.length)return solve(0);draw();ok('짝이 맞았어요!')}
+  else{s.L=s.R=null;draw();bad('짝이 틀렸어요.')}}
+ two.append(l,r);box.append(two);hintBtn(box,'"배양"은 세포를 키운다는 뜻, "합성"은 사람이 만들어 낸다는 뜻이에요.');
+}
+function codes(box){
+ const s=G.rs[1],c=R[1].codes,cur=c[s.i];
+ box.append(mk('p','small','암호 '+(s.i+1)+'/'+c.length));
+ const w=mk('div','code');w.append(mk('div','ch',cur[0]));
+ const inp=mk('input');inp.setAttribute('aria-label','정답 입력');inp.placeholder='기술 이름';
+ const b=mk('button','btn','입력');
+ b.onclick=()=>{if([cur[2]].concat(cur[3]||[]).includes(inp.value.replace(/\s/g,''))){s.i++;if(s.i===c.length)return solve(1);draw();ok('암호 해제!')}else bad('암호가 틀렸어요.')};
+ inp.onkeydown=e=>{if(e.key==='Enter')b.click()};
+ w.append(inp,b);box.append(w,mk('p','','단서: '+cur[1]));
+ hintBtn(box,'정답은 '+cur[2].length+'글자예요. 첫 글자는 "'+cur[2][0]+'"');
+}
+function ox(box){
+ const s=G.rs[2],X=R[2].ox,GO=7,q=X[s.pool[s.p%X.length]];
+ box.append(mk('div','small','연속 정답 '+s.streak+'/'+GO+' (틀리면 0부터 다시!)'),mk('p','big',q[0]));
+ const row=mk('div','oxrow');
+ [['O',1],['X',0]].forEach(([t,v])=>{const b=mk('button','oxb '+(v?'o':'x'),t);b.setAttribute('aria-label',t);
+  b.onclick=()=>{s.p++;if(v===q[1]){s.streak++;if(s.streak>=GO)return solve(2);draw();ok('정답! '+q[2])}else{s.streak=0;draw();bad('틀렸어요. 연속 정답이 0으로 돌아가요. '+q[2])}};row.append(b)});
+ box.append(row);hintBtn(box,'"완벽하게", "아무 문제 없다", "오직", "필요 없다" 같은 극단적인 표현을 의심해 보세요.');
+}
+function mem(box){
+ const s=G.rs[3],M=R[3].mem,g=mk('div','mem');
+ s.cards.forEach(([p,side],idx)=>{const up=s.open.includes(idx),hit=s.matched.includes(idx);
+  const b=mk('button','mc '+(hit?'hit':up?'up':'back'),(up||hit)?M[p][side]:'🧬');b.setAttribute('aria-label',(up||hit)?M[p][side]:'뒤집기');
+  b.onclick=()=>{if(s.lock||up||hit)return;s.open.push(idx);draw();
+   if(s.open.length===2){const[a,c]=s.open;if(s.cards[a][0]===s.cards[c][0]){s.matched.push(a,c);s.open=[];if(s.matched.length===10)return solve(3);draw();ok('짝을 찾았어요!')}
+    else{s.lock=true;G.wrong++;pen(10,'짝이 아니에요.');setTimeout(()=>{s.open=[];s.lock=false;draw()},900)}}};
+  g.append(b)});
+ box.append(g);hintBtn(box,'기술 이름 카드와 그 기술을 설명하는 카드가 한 쌍이에요.');
+}
+function order(box){
+ const s=G.rs[4],O=R[4].order[s.stage];
+ box.append(mk('p','small','공정 '+(s.stage+1)+'/2 : '+(s.stage?'합성우유 만들기':'배양육 만들기')));
+ s.ord.forEach((v,idx)=>{const row=mk('div','ord'),up=mk('button','','▲'),dn=mk('button','','▼');up.setAttribute('aria-label','위로');dn.setAttribute('aria-label','아래로');
+  up.onclick=()=>{if(idx>0){[s.ord[idx-1],s.ord[idx]]=[s.ord[idx],s.ord[idx-1]];draw()}};
+  dn.onclick=()=>{if(idx<O.length-1){[s.ord[idx+1],s.ord[idx]]=[s.ord[idx],s.ord[idx+1]];draw()}};
+  row.append(mk('span','',(idx+1)+'. '+O[v]),up,dn);box.append(row)});
+ const b=mk('button','btn','순서 확인');b.style.marginTop='8px';
+ b.onclick=()=>{if(s.ord.every((v,i)=>v===i)){if(s.stage===1)return solve(4);s.stage=1;s.ord=sh([0,1,2,3]);draw();ok('1단계 성공! 다음 공정이에요.')}else bad('순서가 틀렸어요. 제자리에 맞는 칸: '+s.ord.filter((v,i)=>v===i).length+'개')};
+ box.append(b);hintBtn(box,'재료를 준비하고, 변화시키고, 결과물을 만든 뒤 마지막에 활용하는 흐름이에요.');
+}
+/* arcade */
+function arcade(box){
+ const GOOD=['환경 복원','질병 진단','질병 치료','바이오 에너지','인공 장기 개발'],BAD=['의약품 남용','GM작물 검증 부족','복제 인간 문제','생태계 파괴'];
+ const W=360,H=420,GOAL=16;
+ const info=mk('div','small','');info.style.margin='4px 0';
+ const cv=mk('canvas');cv.width=W;cv.height=H;cv.setAttribute('aria-label','정책 카드 받기 게임');cv.style.cssText='width:100%;max-width:400px;touch-action:none;border-radius:12px;background:#0b1f23;display:block;margin:0 auto';
+ const cx=cv.getContext('2d');let st=null;
+ const startB=mk('button','btn','게임 시작');startB.style.marginTop='10px';
+ box.append(info,cv,startB);
+ const msgs=(t,sub)=>{cx.clearRect(0,0,W,H);cx.fillStyle='#0b1f23';cx.fillRect(0,0,W,H);cx.fillStyle='#e8f6f3';cx.textAlign='center';cx.font='bold 22px sans-serif';cx.fillText(t,W/2,H/2-8);cx.font='15px sans-serif';cx.fillStyle='#9fc2c6';cx.fillText(sub,W/2,H/2+20)};
+ msgs('긍정적 영향 '+GOAL+'장 받기','부정적 영향 카드 3번이면 실패!');
+ const mv=e=>{if(!st)return;const r=cv.getBoundingClientRect();st.x=Math.max(50,Math.min(W-50,(e.clientX-r.left)/r.width*W))};
+ cv.onpointermove=mv;cv.onpointerdown=mv;
+ startB.onclick=()=>{cancelAnimationFrame(raf);startB.textContent='다시 시작';st={x:W/2,it:[],sp:0,good:0,life:3,combo:0,score:0,last:0,flash:0};raf=requestAnimationFrame(loop)};
+ function loop(ts){
+  if(!cv.isConnected||G.over)return;
+  const dt=Math.min(.05,st.last?(ts-st.last)/1000:.016);st.last=ts;
+  if(keys.ArrowLeft)st.x-=320*dt;if(keys.ArrowRight)st.x+=320*dt;st.x=Math.max(50,Math.min(W-50,st.x));
+  st.sp-=dt;if(st.sp<=0){st.sp=Math.max(.4,.8-st.good*.03);const g=Math.random()<.55;const L=(g?GOOD:BAD)[Math.floor(Math.random()*(g?GOOD:BAD).length)];cx.font='bold 15px sans-serif';const w=cx.measureText(L).width+22;st.it.push({x:w/2+Math.random()*(W-w),y:-20,v:130+st.good*10+Math.random()*30,g,L,w})}
+  st.it=st.it.filter(o=>{o.y+=o.v*dt;if(o.y>H-58&&o.y<H-20&&Math.abs(o.x-st.x)<50+o.w/2-8){
+    if(o.g){st.good++;st.combo++;st.score+=10*Math.min(st.combo,5)}else{st.life--;st.combo=0;st.flash=.25}return false}
+   return o.y<H+30});
+  st.flash=Math.max(0,st.flash-dt);
+  cx.fillStyle=st.flash>0?'#4a1f24':'#0b1f23';cx.fillRect(0,0,W,H);
+  cx.textAlign='center';cx.font='bold 15px sans-serif';
+  st.it.forEach(o=>{cx.fillStyle=o.g?'#2f9e6b':'#c9503c';cx.beginPath();cx.roundRect(o.x-o.w/2,o.y-15,o.w,30,8);cx.fill();cx.fillStyle='#fff';cx.fillText((o.g?'✔ ':'✖ ')+o.L,o.x,o.y+5)});
+  cx.fillStyle='#ffd84d';cx.beginPath();cx.roundRect(st.x-50,H-40,100,26,8);cx.fill();cx.fillStyle='#3a2c00';cx.fillText('🗂 서류함',st.x,H-22);
+  info.textContent='승인 '+st.good+'/'+GOAL+'  ·  생명 '+'♥'.repeat(Math.max(0,st.life))+'  ·  콤보 '+st.combo+'  ·  점수 '+st.score;
+  if(st.good>=GOAL){G.arc=st.score;return solve(5)}
+  if(st.life<=0){bad('승인 실패! 부정적 영향 카드를 3장 받았어요.');msgs('승인 실패','시작 버튼을 눌러 다시 도전하세요');st=null;return}
+  raf=requestAnimationFrame(loop)}
+ hintBtn(box,'초록 ✔ 카드는 받고, 빨간 ✖ 카드는 피하세요. 연속으로 받으면 콤보 점수가 올라가요.');
+}
+
+function final(){
+ const box=$('box');box.append(mk('h3','','🔐 마지막 문'),mk('p','small','글자 8개 중 진짜 조각 6개만 골라 단어를 만드세요. 함정 글자 2개가 섞여 있어요! 힌트: 환경·사회·경제가 함께 오래 이어지는 발전 (6글자)'));
+ const ans=mk('div','ans'),tl=mk('div','tiles'),got=[];
+ for(let i=0;i<6;i++)ans.append(mk('div','',''));
+ const clr=()=>{got.length=0;btns.forEach(b=>b.disabled=false);[...ans.children].forEach(d=>d.textContent='')};
+ const btns=sh(G.letters.concat(['미','래'])).map(ch=>{const b=mk('button','tile',ch);b.onclick=()=>{got.push(ch);b.disabled=true;ans.children[got.length-1].textContent=ch;if(got.length===6){if(got.join('')===WORD)win();else{bad('단어가 틀렸어요. 다시 배열하세요.');clr()}}};tl.append(b);return b});
+ const rs=mk('button','btn ghost','다시 놓기');rs.onclick=clr;box.append(ans,tl,rs);
+}
+function end(){$('rooms').innerHTML='';$('msg').textContent='';$('pen').textContent=''}
+function ccode(nm,score,used,st){return nm+' / '+score+'점 / '+fmt(used)+' / 힌트 '+G.hints+' / 오답 '+G.wrong+' / '+(st?'★'.repeat(st):'미완료 '+G.solved.filter(Boolean).length+'/6')}
+function copyBox(txt){const w=mk('div');w.append(mk('p','small','아래 결과 코드를 복사해서 선생님이 알려 주신 곳에 제출하세요. 결과 화면을 캡처해도 좋아요.'));
+ const t=mk('input');t.value=txt;t.readOnly=true;t.style.width='100%';t.setAttribute('aria-label','결과 코드');
+ const b=mk('button','btn ghost','복사하기');b.style.marginTop='8px';
+ b.onclick=()=>{t.select();try{document.execCommand('copy');b.textContent='복사됨!'}catch(e){b.textContent='입력칸을 길게 눌러 복사하세요'}};w.append(t,b);return w}
+function again(b){const r=mk('button','btn','다시 도전');r.style.marginTop='12px';r.onclick=()=>{$('game').classList.add('hide');$('intro').classList.remove('hide')};b.append(r)}
+function win(){clearInterval(timer);G.over=true;cancelAnimationFrame(raf);end();
+ const used=G.tot-G.left,st=G.hints<=1&&G.wrong<=5?3:G.hints<=3&&G.wrong<=12?2:1;
+ const score=Math.max(0,600+G.left+G.arc*5-G.hints*50-G.wrong*20),nm=$('who').value.trim();
+ if(score>BEST){BEST=score;try{localStorage.setItem('bioBest',score)}catch(e){}}
+ const b=$('box');b.innerHTML='';const w=mk('div','win');
+ w.append(mk('h2','','탈출 성공! '+nm),mk('div','stars','★'.repeat(st)+'☆'.repeat(3-st)),
+ mk('p','','걸린 시간 '+fmt(used)+' · 힌트 '+G.hints+'회 · 오답 '+G.wrong+'회 · 점수 '+score),
+ mk('p','','정답은 "지속가능발전"! 생명기술의 혜택이 오늘만이 아니라 미래에도, 모두에게 이어져야 해요.'),
+ mk('h3','','마무리 질문'));
+ const ul=mk('ul','q');['오늘 배운 기술 중 하나를 골라, 그 기술이 지속가능하려면 무엇이 필요할지 한 문장으로 써 보세요.','그 기술의 혜택을 받지 못할 수 있는 사람은 누구이고, 어떻게 도울 수 있을까요?','나의 "생명기술 시민 행동 수칙"을 한 줄로 만든다면?'].forEach(x=>ul.append(mk('li','',x)));
+ w.append(ul,copyBox(ccode(nm,score,used,st)));again(w);b.append(w)}
+function lose(){G.over=true;cancelAnimationFrame(raf);end();
+ const n=G.solved.filter(Boolean).length,nm=$('who').value.trim();
+ const b=$('box');b.innerHTML='';b.append(mk('h2','','⏰ 시간 종료! 문이 잠겼어요'),mk('p','','해결한 사건 '+n+'/6. 어디서 막혔는지 떠올려 보고 다시 도전해 보세요.'),copyBox(ccode(nm,n*100,G.tot,0)));again(b)}
+</script>
+</body>
+</html>
